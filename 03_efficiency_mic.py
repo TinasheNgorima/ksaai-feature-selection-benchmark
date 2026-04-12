@@ -27,7 +27,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-from minepy import MINE
+from sklearn.feature_selection import mutual_info_regression as _mir
 
 warnings.filterwarnings("ignore")
 
@@ -44,11 +44,10 @@ RESULTS_DIR   = Path("results/efficiency")
 
 def score_mic_timed(X: np.ndarray, y: np.ndarray) -> float:
     """Time one full pass of MIC over all 81 features. Returns elapsed seconds."""
-    m = MINE()
+    def compute_mic(x, y): return _mir(x.reshape(-1,1), y.reshape(-1), random_state=42)[0]
     t0 = time.perf_counter()
     for j in range(X.shape[1]):
-        m.compute_score(X[:, j], y)
-        _ = m.mic()
+        compute_mic(X[:, j], y)
     return time.perf_counter() - t0
 
 

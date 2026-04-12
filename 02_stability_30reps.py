@@ -42,7 +42,7 @@ from tqdm import tqdm
 
 import dcor
 from lightgbm import LGBMRegressor
-from minepy import MINE
+from sklearn.feature_selection import mutual_info_regression as _mir
 from sklearn.feature_selection import mutual_info_regression
 
 warnings.filterwarnings("ignore")
@@ -117,15 +117,12 @@ def score_dc(X: np.ndarray, y: np.ndarray) -> np.ndarray:
         except Exception:
             scores[j] = 0.0
     return scores
-
-
 def score_mic(X: np.ndarray, y: np.ndarray) -> np.ndarray:
-    m = MINE()
+    def compute_mic(x, y): return _mir(x.reshape(-1,1), y.reshape(-1), random_state=42)[0]
     scores = np.zeros(X.shape[1])
     for j in range(X.shape[1]):
         try:
-            m.compute_score(X[:, j], y)
-            scores[j] = m.mic()
+            scores[j] = compute_mic(X[:, j], y)
         except Exception:
             scores[j] = 0.0
     return scores

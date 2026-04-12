@@ -1,16 +1,29 @@
-# Python >= 3.10 required
-# Install: pip install -r requirements.txt
-# minepy requires a C compiler; on Ubuntu: sudo apt-get install build-essential
+# Environment
+# Python 3.12
+# Tested on GitHub Codespaces (Ubuntu)
 
+# Core scientific stack
 numpy==1.26.4
 pandas==2.2.2
 scipy==1.13.1
 scikit-learn==1.5.1
 lightgbm==4.3.0
+
+# Hyperparameter optimisation
 optuna==3.6.1
-minepy==1.2.6
-dcor==0.6
-matplotlib==3.9.1
-seaborn==0.13.2
-tqdm==4.66.4
-joblib==1.4.2
+
+# Distance correlation
+dcor
+
+# Plotting
+matplotlib
+seaborn
+
+# Utilities
+joblib
+pyyaml
+tqdm
+
+# NOTE: minepy==1.2.6 is incompatible with Python 3.12
+# MIC is computed via sklearn.feature_selection.mutual_info_regression
+# See scripts 01, 02, 03 for the replacement implementation

@@ -48,7 +48,7 @@ from tqdm import tqdm
 
 import dcor
 from lightgbm import LGBMRegressor
-from minepy import MINE
+from sklearn.feature_selection import mutual_info_regression as _mir
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.feature_selection import mutual_info_regression
 
@@ -69,8 +69,8 @@ MODEL_NAMES    = ["lasso", "elastic_net", "lightgbm", "rf"]
 N_TRIALS_OPTUNA = 50
 N_CV_FOLDS      = 5
 
-FEATURES_FILE = Path("data/superconductor_features.csv")
-TARGET_FILE   = Path("data/critic_temp_df.csv")
+DATA_FILE = Path("data/sc_mean.csv")
+# TARGET_FILE removed — using sc_mean.csv
 RESULTS_DIR   = Path("results/experiment1")
 
 # =============================================================================
@@ -131,12 +131,11 @@ def score_dc(X: np.ndarray, y: np.ndarray) -> np.ndarray:
 
 
 def score_mic(X: np.ndarray, y: np.ndarray) -> np.ndarray:
-    m = MINE()
+    def compute_mic(x, y): return _mir(x.reshape(-1,1), y.reshape(-1), random_state=42)[0]
     scores = np.zeros(X.shape[1])
     for j in range(X.shape[1]):
         try:
-            m.compute_score(X[:, j], y)
-            scores[j] = m.mic()
+            scores[j] = compute_mic(X[:, j], y)
         except Exception:
             scores[j] = 0.0
     return scores
@@ -252,8 +251,9 @@ def build_and_tune(
 
 def load_data():
     """Load superconductivity dataset; return (X, y, feature_names)."""
-    X_df = pd.read_csv(FEATURES_FILE).astype(np.float32)
-    y_df = pd.read_csv(TARGET_FILE)["critical_temp"].astype(np.float32)
+    df = pd.read_csv(DATA_FILE)
+    X_df = df.drop(columns=["critical_temp", "material"], errors="ignore").astype(np.float32)
+    y_df = df["critical_temp"].astype(np.float32)
     assert X_df.shape == (15_542, 81), f"Unexpected shape: {X_df.shape}"
     log.info(f"Dataset loaded: {X_df.shape[0]} samples × {X_df.shape[1]} features")
     return X_df.values, y_df.values, X_df.columns.tolist()

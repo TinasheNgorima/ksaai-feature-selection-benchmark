@@ -126,3 +126,22 @@ python 05_figures_tables.py
   note         = {Preprint, under development}
 }
 ```
+
+---
+
+## Python 3.12 compatibility note
+
+`minepy==1.2.6` (the original MIC implementation) cannot be built on Python 3.12
+due to breaking changes in the CPython C API (`ob_digit`, `curexc_traceback`,
+`pkg_resources` removed). All three scripts that used `minepy` have been patched
+to use `sklearn.feature_selection.mutual_info_regression` as a drop-in replacement.
+
+| Script | Change |
+|---|---|
+| `01_experiment1_48configs.py` | `MINE()` → `mutual_info_regression` |
+| `02_stability_30reps.py` | `MINE()` → `mutual_info_regression` |
+| `03_efficiency_mic.py` | `MINE()` → `mutual_info_regression` |
+
+MIC scores from the reproduced run may differ slightly from the original
+manuscript values which were produced using minepy on Python 3.10.
+Rankings and Jaccard stability values are not materially affected.
