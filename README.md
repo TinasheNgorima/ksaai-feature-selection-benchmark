@@ -122,7 +122,7 @@ python 05_figures_tables.py
   author  = {Ngorima, Tinashe},
   journal = {},
   year    = {2025},
-  howpublished = {\url{https://github.com/YourUsername/ksaai-feature-selection-benchmark}},
+  howpublished = {\url{https://github.com/TinasheNgorima/ksaai-feature-selection-benchmark}},
   note         = {Preprint, under development}
 }
 ```
