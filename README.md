@@ -27,20 +27,20 @@ Reproducible code for the manuscript:
 
 ## Dataset
 
-The superconductivity dataset is publicly available from the UCI Machine Learning Repository:
+This study uses the curated superconductivity dataset prepared by Matasov and Krasavina (2020):
 
-- Hamidieh, K. (2018). *Superconductivity Data*. UCI ML Repository.  
-  <https://archive.ics.uci.edu/ml/datasets/Superconductivty+Data>
+> Matasov, A. & Krasavina, V. (2020). Visualization of Superconducting Materials.
+> SN Applied Sciences, 2(8), 1463. https://doi.org/10.1007/s42452-020-03260-6
 
-Download `train.csv` and place the two required files in `data/`:
+Download `sc_mean.csv` and place it at `data/sc_mean.csv` before running any script:
 
-| File | Description |
-|------|-------------|
-| `data/superconductor_features.csv` | 81 physicochemical descriptors (n = 15,542) |
-| `data/critic_temp_df.csv` | Target column `critical_temp` (n = 15,542) |
+https://github.com/matasovav/DATA_SC/blob/master/sc_mean.csv
 
-Alternatively, use `data/sc_mean.csv` (the merged file with `critical_temp` and `material`
-columns included), which is the format used in notebooks 03 and 04.
+The original superconductivity measurements are described in:
+
+> Hamidieh, K. (2018). A data-driven statistical model for predicting the
+> critical temperature of a superconductor. Computational Materials Science,
+> 154, 346–354. https://doi.org/10.1016/j.commatsci.2018.07.052
 
 ---
 
