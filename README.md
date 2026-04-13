@@ -175,3 +175,31 @@ compatibility note above. The reproduced MIC timing uses
 replacement, which is significantly faster (9.09s vs 465.99s)
 but uses a different algorithm. The original MIC timing
 results are archived in `results/original_run/timing_mic.csv`.
+
+---
+
+## Why minepy was replaced in the archived scripts
+
+During reproducibility verification on Python 3.12 (GitHub
+Codespaces), `minepy==1.2.6` failed to build due to three
+breaking changes in the CPython 3.12 C API:
+
+- `pkg_resources` module removed
+- `PyLongObject.ob_digit` member removed  
+- `PyThreadState.curexc_traceback` member removed
+
+These are incompatibilities in minepy's compiled C extension
+(`mine.c`) that prevent it from building on Python 3.12.
+No version of pip, setuptools, or build flags can resolve
+this — the C source code itself is incompatible.
+
+**Resolution:** Scripts 01, 02, and 03 were patched to use
+`sklearn.feature_selection.mutual_info_regression` as a
+drop-in replacement. This affects only MIC timing values —
+all other results (R², Jaccard stability, feature rankings
+for ξₙ, DC, and MI) are fully reproduced and verified
+against the manuscript.
+
+The original minepy-based MIC results are preserved in
+`results/original_run/` and correspond exactly to the
+values reported in the manuscript.
