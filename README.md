@@ -159,8 +159,8 @@ python src/figures_tables.py
 Selection: A Benchmark of Chatterjee’s ξn, Distance
 Correlation, Mutual Information, and the Maximal
 Information Coefficient},
-  year    = {2025},
-  doi     = {10.xxxx/zenodo.xxxxxx},
+  year    = {2026},
+  doi     = {DOI: 10.5281/zenodo.19675804},
   url     = {https://doi.org/10.xxxx/zenodo.xxxxxx}
 }
 ```
