@@ -153,15 +153,15 @@ python src/figures_tables.py
 ## Citation
 
 ```bibtex
-@dataset{ngorima2025ksaai,
-  author  = {Ngorima, Tinashe},
-  title   = {Accuracy–Stability Trade-offs in Correlation-Based Feature
-Selection: A Benchmark of Chatterjee’s ξn, Distance
-Correlation, Mutual Information, and the Maximal
-Information Coefficient},
-  year    = {2026},
-  doi     = {DOI: 10.5281/zenodo.19675804},
-  url     = {https://doi.org/10.xxxx/zenodo.xxxxxx}
+@misc{ngorima2025ksaai,
+  author       = {Ngorima, Tinashe},
+  title        = {Accuracy--Stability Trade-offs in Correlation-Based Feature
+                  Selection: A Benchmark of {Chatterjee's} $\xi_n$, Distance
+                  Correlation, Mutual Information, and the Maximal
+                  Information Coefficient},
+  year         = {2026},
+  howpublished = {\url{https://doi.org/10.5281/zenodo.19675804}},
+  note         = {Zenodo. \texttt{doi:10.5281/zenodo.19675804}}
 }
 ```
 
