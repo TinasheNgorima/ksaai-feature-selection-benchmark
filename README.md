@@ -1,7 +1,7 @@
 # Benchmarking Chatterjee's ξₙ for Feature Selection in Materials Informatics
 
 This repository provides a fully reproducible implementation of the experiments presented in:  
-&gt; "Accuracy–Stability Trade-offs in Correlation-Based Feature Selection: A Benchmark of Chatterjee's ξₙ, Distance Correlation, Mutual Information, and the Maximal Information Coefficient"
+&gt; "Evaluating Chatterjee's ξₙ for Feature Selection: Accuracy and Stability Against Modern Dependence Measures"
 
 It benchmarks Chatterjee's ξₙ against Distance Correlation, Mutual Information, and MIC across 48 experimental configurations and a 30-repetition stability analysis on superconductivity data.
 
