@@ -1,0 +1,50 @@
+# =============================================================================
+# config.yaml — Centralised configuration for all pipeline scripts
+# =============================================================================
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+data:
+  features_file: "data/superconductor_features.csv"   # 15542 × 81
+  target_file:   "data/critic_temp_df.csv"            # column: critical_temp
+  merged_file:   "data/sc_mean.csv"                   # alternative: merged CSV
+                                                       # with critical_temp + material
+
+# ── Seeds (JMLR reproducibility schedule) ─────────────────────────────────────
+seeds:
+  # Experiment 1: single train-test split
+  experiment1_split: 53
+  # Experiment 1 & 2: CV folds, model initialisation, mutual_info_regression
+  model_and_cv: 42
+  # Experiment 2: repetition r uses random_state = r  (0 … 29)
+  stability_rep_pattern: "sequential"   # i.e. random_state = rep_index
+
+# ── Experiment 1 ──────────────────────────────────────────────────────────────
+experiment1:
+  test_size: 0.20
+  val_size:  0.20        # fraction of train_val
+  thresholds: [10, 15, 20]           # top-k % of 81 features
+  methods:   [dc, mi, mic, xi]
+  models:    [lasso, elastic_net, lightgbm, rf]
+  n_trials_optuna: 50
+  n_cv_folds: 5
+
+# ── Experiment 2 (stability) ───────────────────────────────────────────────────
+experiment2:
+  threshold: 0.20        # top 20 % → 16 features
+  n_repetitions: 30
+  n_top_features: 16     # int(81 * 0.20)
+  methods:   [DC, MI, MIC, XI]
+  model:     lightgbm
+  n_trials_optuna: 20
+  n_cv_folds: 5
+  test_size: 0.20
+
+# ── Computational efficiency ───────────────────────────────────────────────────
+efficiency:
+  n_repetitions: 30
+
+# ── Output ────────────────────────────────────────────────────────────────────
+output:
+  results_dir: "results"
+  figures_dir: "results/figures"
+  dpi: 300
