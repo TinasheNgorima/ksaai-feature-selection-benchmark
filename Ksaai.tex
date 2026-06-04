@@ -619,9 +619,9 @@ method). All six contrasts yield negligible-to-small effects
 \centering
 \includegraphics[width=\columnwidth]{feature_agreement_matrix}
 \caption{Feature selection agreement across the four dependence measures at the
-20\% retention threshold, restricted to the 18 descriptors selected by two or
+20\% retention threshold, restricted to the 17 descriptors selected by two or
 more methods ($p = 81$, $n = 15{,}542$). Rows are ordered by decreasing
-agreement level (right axis). The complete 34-feature matrix, including the 13
+agreement level (right axis). The complete 36-feature matrix, including the 19
 single-method-only descriptors, is provided in
 Appendix~\ref{app:feature_matrix}.}
 \label{fig:agreement}
@@ -880,7 +880,7 @@ mechanistic argument that symmetric dependence measures such as DC capture
 bidirectional relationships among borderline descriptors that asymmetric
 $Y \mid X$ scoring systematically underweights. DC's preferential retention of
 these high-impact borderline features explains its $R^2$ advantage and is
-directly evidenced by the 7 $\xi_n$-exclusive descriptors (range 6--8) in
+directly evidenced by the 11 $\xi_n$-exclusive descriptors in
 Figure~\ref{fig:agreement} that no symmetric measure selects. However, the
 asymmetric and rank-based construction of $\xi_n$ offers distinct advantages
 for feature selection: by aligning directly with the objective of ranking
@@ -942,7 +942,7 @@ Python~3.12 (see Code and Data Availability).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
 
-We presented a cmparative benchmark of Chatterjee's $\xi_n$ against established dependence measures (DC, MI, MIC) across 48 feature-selection configurations and 30 repeated resampling runs on a superconductivity dataset ($n = 15{,}542$, $p = 81$).
+We presented a comparative benchmark of Chatterjee's $\xi_n$ against established dependence measures (DC, MI, MIC) across 48 feature-selection configurations and 30 repeated resampling runs on a superconductivity dataset ($n = 15{,}542$, $p = 81$).
 
 Across all settings, DC achieved the highest predictive performance ($R^{2} = 0.893 \pm 0.010$), while $\xi_n$ achieved approximately 94\% of this performance with reduced computational cost and faster per-step scoring time. All methods exhibited high stability under repeated resampling, with Jaccard similarity between 0.94 and 0.96 and low coefficients of variation (0.8\%--1.1\%).
 
@@ -971,16 +971,16 @@ The author declares no funding and no competing interests.}
 \label{app:feature_matrix}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Figure~\ref{fig:agreement_full} presents the full binary agreement matrix for
-all 34 descriptors appearing in at least one selected subset at the 20\%
-retention threshold. The 13 single-method-only descriptors (agreement level~1)
+all 36 descriptors appearing in at least one selected subset at the 20\%
+retention threshold. The 19 single-method-only descriptors (agreement level~1)
 are retained here for completeness but excluded from the main-text
-Figure~\ref{fig:agreement}, which focuses on the 18 analytically informative
+Figure~\ref{fig:agreement}, which focuses on the 17 analytically informative
 consensus features (agreement $\geq 2$).
  
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\columnwidth]{full_feature_agreement_matrix}
-\caption{Complete feature selection agreement matrix for all 34 descriptors
+\caption{Complete feature selection agreement matrix for all 36 descriptors
 selected by at least one method at the 20\% retention threshold
 ($p = 81$, $n = 15{,}542$). Rows are ordered by decreasing agreement level
 (right axis). The dashed horizontal rule separates features with agreement
