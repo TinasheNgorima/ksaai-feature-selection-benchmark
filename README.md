@@ -1,8 +1,8 @@
-# Evaluating Chatterjee's ξₙ for Feature Selection: Accuracy and Stability Against Modern Dependence Measures
+# Chatterjee's ξₙ as a Feature-Selection Criterion: An Empirical Study of Accuracy, Stability, and Computational Cost
 
 This repository provides a fully reproducible implementation of the experiments presented in:
 
-> "Evaluating Chatterjee's ξₙ for Feature Selection: Accuracy and Stability Against Modern Dependence Measures"
+> "Chatterjee's ξₙ as a Feature-Selection Criterion: An Empirical Study of Accuracy, Stability, and Computational Cost"
 
 It benchmarks Chatterjee's ξₙ against Distance Correlation, Mutual Information, and MIC across 48 experimental configurations and a 30-repetition stability analysis on superconductivity data.
 
