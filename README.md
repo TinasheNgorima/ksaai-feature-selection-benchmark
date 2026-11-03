@@ -156,9 +156,13 @@ python src/experiments/figures_tables.py
 ```bibtex
 @misc{ngorima2026ksaai,
   author       = {Ngorima, Tinashe},
-  title        = {Evaluating Chatterjee's $\xi_n$ for Feature Selection: Accuracy and Stability Against Modern Dependence Measures},
+  title        = {Chatterjee's $\xi_n$ as a Feature-Selection Criterion:
+                  An Empirical Study of Accuracy, Stability, and
+                  Computational Cost},
   year         = {2026},
-  howpublished = {\url{https://doi.org/10.5281/zenodo.19675804}},
-  note         = {Zenodo. \texttt{doi:10.5281/zenodo.19675804}}
+  howpublished = {Zenodo},
+  doi          = {10.5281/zenodo.19675803},
+  url          = {https://doi.org/10.5281/zenodo.19675803},
+  note         = {Code and results. Software archive}
 }
 ```
