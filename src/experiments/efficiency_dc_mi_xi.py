@@ -48,8 +48,8 @@ DATA_FILE     = Path("data/sc_mean.csv")
 RESULTS_DIR   = Path("results/efficiency")
 FIGURES_DIR   = Path("results/figures")
 
-# JMLR figure style (single-column: 6.50 in wide)
-JMLR_RC = {
+# Figure style (single-column: 6.50 in wide)
+FIG_RC = {
     "font.family"     : "serif",
     "font.serif"      : ["DejaVu Serif", "Times New Roman", "Times"],
     "font.size"       : 10,
@@ -178,7 +178,7 @@ def plot_agreement_matrix(
     pres.to_csv(out_prefix.parent / "feature_presence_matrix.csv", index=False)
 
     # ── Plot ──────────────────────────────────────────────────────────────────
-    plt.rcParams.update(JMLR_RC)
+    plt.rcParams.update(FIG_RC)
     fig_height = max(3.5, len(pres) * 0.28)
     fig, ax = plt.subplots(figsize=(6.50, fig_height))
 

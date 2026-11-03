@@ -5,7 +5,7 @@ Experiment 1: Comprehensive comparison of four feature-selection methods across
 48 configurations (4 methods × 3 thresholds × 4 models) on the superconductivity
 dataset (n = 15,542, p = 81).
 
-Seed schedule (JMLR reproducibility criteria)
+Seed schedule (reproducibility criteria)
 ---------------------------------------------
   train-test split      : random_state = 53
   cross-validation folds: random_state = 42

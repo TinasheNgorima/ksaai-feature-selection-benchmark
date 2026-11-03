@@ -9,7 +9,7 @@ data:
   merged_file:   "data/sc_mean.csv"                   # alternative: merged CSV
                                                        # with critical_temp + material
 
-# ── Seeds (JMLR reproducibility schedule) ─────────────────────────────────────
+# ── Seeds (reproducibility schedule) ─────────────────────────────────────
 seeds:
   # Experiment 1: single train-test split
   experiment1_split: 53

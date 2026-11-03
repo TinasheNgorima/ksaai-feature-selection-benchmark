@@ -48,12 +48,12 @@ OUT.mkdir(parents=True, exist_ok=True)
 METHODS      = ["DC", "MI", "MIC", "XI"]
 METHOD_LABEL = {"DC": "DC", "MI": "MI", "MIC": "MIC", "XI": r"$\xi_n$"}
 
-# JMLR style constants
+# Figure style constants
 FONT_BODY  = 10
 FONT_TICK  = 9
 FONT_SMALL = 8
 DPI        = 300
-FIG_W_COL  = 6.0   # single column width inches (JMLR approx)
+FIG_W_COL  = 6.0   # single-column width in inches
 FIG_W_HALF = 3.1
 
 plt.rcParams.update({
@@ -371,79 +371,78 @@ def table6_timing():
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# FIGURE 1 — Nemenyi heatmap (panel a) + Cohen's d_z heatmap (panel b)
+# FIGURE 1 — Nemenyi heatmap (panel a, Exp. 1) + Cohen's d_z (panel b, Exp. 2)
 # ════════════════════════════════════════════════════════════════════════════
+def _friedman_r2(friedman):
+    """Read the Friedman R2 result from either JSON layout the pipeline writes."""
+    if "r2" in friedman:                       # experiment1_48configs.py layout
+        return friedman["r2"]["statistic"], friedman["r2"]["p_value"]
+    return friedman.get("chi2_r2", float("nan")), friedman.get("p_r2", float("nan"))
+
+
 def fig1_stat_tests():
     """
-    Panel a: Nemenyi p-values from Experiment 1 (48 configs).
-    Panel b: Cohen's d_z from Experiment 2 (30 paired reps, LightGBM, 20%).
-    These are DIFFERENT statistical populations and are labelled accordingly.
+    Panel a: Nemenyi adjusted p-values, Experiment 1 (12 model-threshold blocks).
+             Lower triangle only. Three discrete bins matching the caption:
+             p < 0.01, 0.01 <= p < 0.05, p >= 0.05.
+    Panel b: paired Cohen's d_z, Experiment 2 (30 shared splits, LightGBM, 20%).
+             Lower triangle only (the matrix is antisymmetric).
     """
-    nem_r2  = load_csv(EXP1 / "nemenyi_matrix_r2.csv",  index_col=0)
-    dz_r2   = load_csv(STAB / "cohens_d_matrix_r2.csv", index_col=0)
-    friedman = load_json(EXP1 / "friedman_results.json")
+    from matplotlib.colors import ListedColormap, BoundaryNorm
 
-    fig, axes = plt.subplots(1, 2, figsize=(FIG_W_COL * 1.8, FIG_W_HALF * 2.2))
+    nem_r2 = load_csv(EXP1 / "nemenyi_matrix_r2.csv", index_col=0)
+    dz_r2  = load_csv(STAB / "cohens_d_matrix_r2.csv", index_col=0)
+    chi2_val, p_val = _friedman_r2(load_json(EXP1 / "friedman_results.json"))
 
-    # ── panel a: Nemenyi p-values ──
-    ax = axes[0]
     labels = [METHOD_LABEL[m] for m in METHODS]
-    nem_arr = nem_r2.loc[METHODS, METHODS].values.astype(float)
+    k = len(METHODS)
+    lower = np.tril(np.ones((k, k), dtype=bool), k=-1)
 
-    # colour: dark red <0.01, orange 0.01–0.05, grey >=0.05
-    cmap_a = plt.cm.RdYlGn_r
-    im_a = ax.imshow(nem_arr, cmap=cmap_a, vmin=0, vmax=0.10, aspect="auto")
+    fig, axes = plt.subplots(1, 2, figsize=(FIG_W_COL * 1.35, FIG_W_HALF * 1.35))
 
-    ax.set_xticks(range(len(METHODS)))
-    ax.set_yticks(range(len(METHODS)))
-    ax.set_xticklabels(labels, fontsize=FONT_TICK)
-    ax.set_yticklabels(labels, fontsize=FONT_TICK)
-
-    for i in range(len(METHODS)):
-        for j in range(len(METHODS)):
-            if i == j:
-                chi2_val = friedman.get("chi2_r2", float("nan"))
-                p_val    = friedman.get("p_r2",    float("nan"))
-                ax.text(j, i, f"$\\chi^2={chi2_val:.1f}$\n$p={p_val:.3f}$",
-                        ha="center", va="center", fontsize=FONT_SMALL - 1)
-            elif j > i:
-                ax.text(j, i, "—", ha="center", va="center",
-                        fontsize=FONT_TICK, color="white")
-            else:
-                v = nem_arr[i, j]
-                ax.text(j, i, f"{v:.3f}", ha="center", va="center",
-                        fontsize=FONT_SMALL,
+    # ── panel a ──
+    ax = axes[0]
+    nem = nem_r2.loc[METHODS, METHODS].values.astype(float)
+    nem_plot = np.where(lower, nem, np.nan)
+    cmap_a = ListedColormap(["#67000d", "#ef3b2c", "#d9d9d9"])
+    norm_a = BoundaryNorm([0.0, 0.01, 0.05, 1.0], cmap_a.N)
+    cmap_a.set_bad("white")
+    im_a = ax.imshow(nem_plot, cmap=cmap_a, norm=norm_a)
+    for i in range(k):
+        for j in range(k):
+            if lower[i, j]:
+                v = nem[i, j]
+                txt = "<0.001" if v < 0.001 else f"{v:.3f}"
+                ax.text(j, i, txt, ha="center", va="center", fontsize=FONT_SMALL,
                         color="white" if v < 0.05 else "black")
+    ax.set_xticks(range(k)); ax.set_yticks(range(k))
+    ax.set_xticklabels(labels); ax.set_yticklabels(labels)
+    p_txt = r"$p<0.0001$" if p_val < 1e-4 else rf"$p={p_val:.4f}$"
+    ax.set_title("(a) Nemenyi adjusted $p$, Exp. 1\n"
+                 rf"Friedman $\chi^2={chi2_val:.1f}$, " + p_txt,
+                 fontsize=FONT_SMALL + 1)
+    cb_a = fig.colorbar(im_a, ax=ax, shrink=0.75, ticks=[0.005, 0.03, 0.525])
+    cb_a.ax.set_yticklabels([r"$<0.01$", r"$0.01$–$0.05$", r"$\geq 0.05$"],
+                            fontsize=FONT_SMALL)
 
-    ax.set_title("(a) Nemenyi $p$-values\n(Exp.~1, 48 configurations)",
-                 fontsize=FONT_BODY)
-
-    # ── panel b: Cohen's d_z ──
+    # ── panel b ──
     ax = axes[1]
-    dz_arr = dz_r2.loc[METHODS, METHODS].values.astype(float)
-    vmax_dz = np.nanmax(np.abs(dz_arr))
-    im_b = ax.imshow(dz_arr, cmap="RdBu_r", vmin=-vmax_dz, vmax=vmax_dz,
-                     aspect="auto")
-
-    ax.set_xticks(range(len(METHODS)))
-    ax.set_yticks(range(len(METHODS)))
-    ax.set_xticklabels(labels, fontsize=FONT_TICK)
-    ax.set_yticklabels(labels, fontsize=FONT_TICK)
-
-    for i in range(len(METHODS)):
-        for j in range(len(METHODS)):
-            v = dz_arr[i, j]
-            if np.isnan(v):
-                ax.text(j, i, "—", ha="center", va="center",
-                        fontsize=FONT_TICK)
-            else:
-                ax.text(j, i, f"{v:.2f}", ha="center", va="center",
-                        fontsize=FONT_SMALL,
-                        color="white" if abs(v) > vmax_dz * 0.5 else "black")
-
-    ax.set_title(r"(b) Cohen's $d_z$" + "\n(Exp.~2, 30 paired reps, LightGBM)",
-                 fontsize=FONT_BODY)
-    fig.colorbar(im_b, ax=axes[1], shrink=0.7, label=r"$d_z$")
+    dz = dz_r2.loc[METHODS, METHODS].values.astype(float)
+    dz_plot = np.where(lower, -dz, np.nan)      # column method minus row method > 0
+    vmax = np.nanmax(np.abs(dz))
+    cmap_b = plt.cm.Blues.copy(); cmap_b.set_bad("white")
+    im_b = ax.imshow(dz_plot, cmap=cmap_b, vmin=0, vmax=vmax)
+    for i in range(k):
+        for j in range(k):
+            if lower[i, j]:
+                v = dz_plot[i, j]
+                ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=FONT_SMALL,
+                        color="white" if v > vmax * 0.5 else "black")
+    ax.set_xticks(range(k)); ax.set_yticks(range(k))
+    ax.set_xticklabels(labels); ax.set_yticklabels(labels)
+    ax.set_title("(b) Paired $d_z$ on test $R^2$, Exp. 2\n"
+                 "column method minus row method", fontsize=FONT_SMALL + 1)
+    fig.colorbar(im_b, ax=ax, shrink=0.75, label=r"$d_z$")
 
     plt.tight_layout()
     fig.savefig(OUT / "fig1_stat_tests.pdf")
@@ -453,33 +452,28 @@ def fig1_stat_tests():
 
 
 # ════════════════════════════════════════════════════════════════════════════
-# FIGURE 3 — Pareto frontier (Experiment 2)
+# FIGURE 3 — Accuracy-variability plane (Experiment 2)
 # ════════════════════════════════════════════════════════════════════════════
 def fig3_pareto():
     df = load_csv(STAB / "aggregated_summary.csv").set_index("method")
 
-    fig, ax = plt.subplots(figsize=(FIG_W_HALF * 1.5, FIG_W_HALF * 1.4))
+    fig, ax = plt.subplots(figsize=(FIG_W_HALF * 1.5, FIG_W_HALF * 1.2))
     colors = {"DC": "#d62728", "MI": "#1f77b4", "MIC": "#9467bd", "XI": "#2ca02c"}
 
     for method in METHODS:
         row = df.loc[method]
-        ax.errorbar(
-            row["r2_mean"], row["cov_r2_pct"],
-            xerr=row["r2_std"],
-            fmt="o", color=colors[method], markersize=7,
-            label=METHOD_LABEL[method], capsize=3
-        )
-        ax.annotate(METHOD_LABEL[method],
-                    (row["r2_mean"], row["cov_r2_pct"]),
-                    textcoords="offset points", xytext=(5, 4),
-                    fontsize=FONT_SMALL)
+        ax.errorbar(row["r2_mean"], row["cov_r2_pct"], xerr=row["r2_std"],
+                    fmt="o", color=colors[method], markersize=7,
+                    label=METHOD_LABEL[method], capsize=3)
+        ax.annotate(METHOD_LABEL[method], (row["r2_mean"], row["cov_r2_pct"]),
+                    textcoords="offset points", xytext=(5, 5), fontsize=FONT_SMALL)
 
-    ax.set_xlabel(r"Mean $R^2$ (Performance)", fontsize=FONT_BODY)
-    ax.set_ylabel(r"CoV($R^2$) \% (Instability)", fontsize=FONT_BODY)
-    ax.set_title("Performance–stability Pareto frontier\n"
-                 "(LightGBM, 20\\% threshold, 30 repetitions)",
-                 fontsize=FONT_BODY)
-    ax.legend(fontsize=FONT_SMALL)
+    ax.set_xlabel(r"Mean test $R^2$", fontsize=FONT_BODY)
+    ax.set_ylabel(r"CoV($R^2$), %", fontsize=FONT_BODY)
+    ax.set_title("Accuracy and variability over 30 repetitions\n"
+                 "(LightGBM, 20% retention)", fontsize=FONT_BODY)
+    ax.grid(True, linestyle=":", linewidth=0.5, alpha=0.6)
+    ax.legend(fontsize=FONT_SMALL, loc="center left")
     plt.tight_layout()
     fig.savefig(OUT / "fig3_pareto.pdf")
     fig.savefig(OUT / "fig3_pareto.png")

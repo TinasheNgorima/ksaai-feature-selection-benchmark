@@ -1,0 +1,2 @@
+method,n_repetitions,mean_total_s,std_total_s,mean_s_per_feature,cv_pct,implementation,python_version,processor
+MIC,30,381.94276380999946,6.955132845522653,4.715342763086413,1.8209882486430715,"minepy b'1.2.6' MINE(alpha=0.6, c=15)",3.10.20,"Intel64 Family 6 Model 165 Stepping 5, GenuineIntel"
