@@ -151,7 +151,7 @@ def plot_agreement_matrix(
     show_all : if True, include features selected by only one method (Appendix A).
                if False, show only features with agreement ≥ 2 (main-text Figure 1).
     """
-    n_top = int(np.ceil(THRESHOLD_PCT * n_features_total))
+    n_top = int(np.floor(THRESHOLD_PCT * n_features_total))
 
     dc_feat  = set(df_dc.sort_values("DC Score",  ascending=False).head(n_top)["Feature"])
     mi_feat  = set(df_mi.sort_values("MI Score",  ascending=False).head(n_top)["Feature"])
