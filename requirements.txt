@@ -1,5 +1,5 @@
 # Environment
-# Python 3.12
+# Python 3.13
 # Tested on GitHub Codespaces (Ubuntu)
 
 # Core scientific stack
