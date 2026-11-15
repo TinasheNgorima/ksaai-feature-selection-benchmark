@@ -24,6 +24,6 @@ joblib
 pyyaml
 tqdm
 
-# NOTE: minepy==1.2.6 is incompatible with Python 3.12
-# MIC is computed via sklearn.feature_selection.mutual_info_regression
-# See scripts 01, 02, 03 for the replacement implementation
+# MIC: minepy==1.2.6 (MINE, alpha=0.6, c=15) runs in a separate
+# Python 3.10 environment because it does not build on Python 3.12+.
+# See README > Installation.
