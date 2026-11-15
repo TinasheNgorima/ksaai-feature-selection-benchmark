@@ -46,6 +46,8 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
 
+from mic_env import mic_python_cmd
+
 import dcor
 from lightgbm import LGBMRegressor
 from sklearn.feature_selection import mutual_info_regression as _mir
@@ -131,8 +133,6 @@ def score_dc(X: np.ndarray, y: np.ndarray) -> np.ndarray:
     return scores
 
 
-MIC_PYTHON = r"C:\Users\tngorima\envs\ngorima_mic\python.exe"
-
 def score_mic(X: np.ndarray, y: np.ndarray) -> np.ndarray:
     """Compute MIC scores via minepy==1.2.6 in an isolated Python 3.10 subprocess."""
     import subprocess, tempfile, os
@@ -160,7 +160,7 @@ def score_mic(X: np.ndarray, y: np.ndarray) -> np.ndarray:
     out_path = tmp_path + "_out.npy"
     try:
         result = subprocess.run(
-            [MIC_PYTHON, scr_path, tmp_path, out_path],
+            mic_python_cmd() + [scr_path, tmp_path, out_path],
             capture_output=True, text=True, timeout=3600
         )
         if result.returncode != 0:

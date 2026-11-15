@@ -34,6 +34,8 @@ from sklearn.feature_selection import mutual_info_regression
 import optuna
 optuna.logging.set_verbosity(optuna.logging.WARNING)
 
+from mic_env import mic_python_cmd
+
 # ── paths ──────────────────────────────────────────────────────────────────
 DATA_PATH   = "data/sc_mean.csv"
 TARGET_COL  = "critical_temp"
@@ -64,8 +66,6 @@ def score_mi(X_train, y_train):
     return mutual_info_regression(X_train, y_train, random_state=MI_SEED)
 
 
-MIC_PYTHON = r"C:\\Users\\tngorima\\envs\\ngorima_mic\\python.exe"
-
 def score_mic(X_train, y_train):
     """Compute MIC scores via minepy==1.2.6 in an isolated Python 3.10 subprocess."""
     import subprocess, tempfile, os
@@ -92,7 +92,7 @@ def score_mic(X_train, y_train):
         scr.write(script)
     out_path = tmp_path + "_out.npy"
     try:
-        result = subprocess.run([MIC_PYTHON, scr_path, tmp_path, out_path], capture_output=True, text=True, timeout=3600)
+        result = subprocess.run(mic_python_cmd() + [scr_path, tmp_path, out_path], capture_output=True, text=True, timeout=3600)
         if result.returncode != 0:
             raise RuntimeError(f"MIC subprocess failed:\n{result.stderr}")
         scores = np.load(out_path)

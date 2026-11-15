@@ -83,7 +83,7 @@ conda activate ngorima_mic
 pip install numpy pandas minepy==1.2.6
 ```
 
-Set the interpreter path for this environment in `MIC_PYTHON` in `src/experiments/experiment1_48configs.py` (and the matching variable in `stability_30reps.py`) before running the pipeline.
+The pipeline calls this environment automatically through `conda run`. Without conda, set the `MIC_PYTHON` environment variable to any Python 3.10 interpreter with `minepy==1.2.6` installed.
 
 Users without a Python 3.10 environment can reproduce every analysis from the archived MIC scores in `results/experiment1/feature_scores/` and `results/stability/MIC/`.
 
