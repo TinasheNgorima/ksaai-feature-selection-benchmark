@@ -65,14 +65,27 @@ Complete seed assignments and environment specifications are recorded in `requir
 
 ## Installation
 
-Tested on Python 3.10+.
+The pipeline uses two Python environments.
 
-`minepy` requires a C compiler. On Ubuntu/Debian:
+**Main environment (Python 3.13).** Runs ξₙ, MI, DC, model training, statistics and figures.
 
 ```bash
-sudo apt-get install build-essential
+python3.13 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+**MIC environment (Python 3.10).** `minepy==1.2.6` does not build on Python 3.12 or later. MIC scoring and timing run in a separate Python 3.10 environment, called by the main pipeline as a subprocess. `minepy` requires a C compiler (on Ubuntu/Debian: `sudo apt-get install build-essential`).
+
+```bash
+conda create -n ngorima_mic python=3.10
+conda activate ngorima_mic
+pip install numpy pandas minepy==1.2.6
+```
+
+Set the interpreter path for this environment in `MIC_PYTHON` in `src/experiments/experiment1_48configs.py` (and the matching variable in `stability_30reps.py`) before running the pipeline.
+
+Users without a Python 3.10 environment can reproduce every analysis from the archived MIC scores in `results/experiment1/feature_scores/` and `results/stability/MIC/`.
 
 ## Running the pipeline
 
